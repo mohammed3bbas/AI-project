@@ -13,7 +13,7 @@ def readLocations():
     return locations
 def readRequests():
     "creating a list of requests (objects) each object contain (Request ID, Pickup location, Delivery location, early ,late)"
-    f = open("request-draft1.txt", "r")
+    f = open("request-draft.txt", "r")
     lines = f.readlines()
     requests = []
     counter = 0
@@ -37,7 +37,10 @@ capacity =3
 requests.sort(key=lambda x: x.late )
 timer = 0
 currentlocation  = 4
-for i in requests: #moving on orderd requsts
+index = 0
+while index < len(requests):
+# for i in requests: #moving on orderd requsts
+    i = requests[index]
     print("-------------------------")
     print("request id :"+str(i.id))
     print("Requests queue ", printRequestQueue(pickedRequestsQueue) )#pickedRequestsQueue)
@@ -55,22 +58,26 @@ for i in requests: #moving on orderd requsts
                 i.delivered = True
                 deliverdReq=pickedRequestsQueue.pop(pickedRequestsQueue.index(i))
                 capacity=capacity+1
+                index+=1
             else:
                 h=0
-                #how should i do it ??? back fucking tracking !!!
-                #i think i can do it by using a while loop and i can affect on the requests list
-                #maybe by swaping it can be done
-        else:
+                #if there is no available space to pick request???
+
+
+        else: #if already picked
             timer += int(locations[int(currentlocation)][int(i.delivery)]) #already picked so dilver it
             print("dilvered time : " + str(timer))
             currentlocation = int(i.delivery)
             i.delivered = True
             deliverdReq=pickedRequestsQueue.pop(pickedRequestsQueue.index(i))
             capacity=capacity+1
+            index += 1
+    else: #if the request is late backtracking !
+        h=10
 
-        for j in requests: #if  dilevery location is pickup for other request
-            if (j.pickup == deliverdReq.delivery and j.delivered==False and capacity!=0):
-                pickedRequestsQueue.append(j)
-                print("YEES for request "+str(j.id))
-                capacity=capacity-1
+    for j in requests: #if  dilevery location is pickup for other request
+        if (j.pickup == deliverdReq.delivery and j.delivered==False and capacity!=0):
+            pickedRequestsQueue.append(j)
+            print("YEES for request "+str(j.id))
+            capacity=capacity-1
     print("-------------------------")
