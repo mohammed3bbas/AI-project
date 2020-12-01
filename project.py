@@ -17,7 +17,7 @@ def readLocations():
 
 def readRequests():
     "creating a list of requests (objects) each object contain (Request ID, Pickup location, Delivery location, early ,late)"
-    f = open("request-draft2.txt", "r")
+    f = open("request-draft3.txt", "r")
     lines = f.readlines()
     requests = []
     counter = 0
@@ -57,20 +57,26 @@ def backtrack(requests,index,currentlocation):
     requests.insert(index,nearest)
     return requests
 
-    # return None
 
 def findClosestRequest(requests,currentlocation,index):
     closestIndex=index
+    print("current: "+str(currentlocation))
     closest = int(locations[currentlocation][int(requests[index].pickup)])
     myTime =closest
+    print(closest)
     # print(closest)
     for i in range(index,len(requests)):
-        # print("distances ")
-        # print(locations[currentlocation][int(requests[i].pickup)])
+
+        print("pick up : " +str(int(requests[i].pickup)))
+        print("distances : "+ str(locations[currentlocation][int(requests[i].pickup)]) )
         # print("---------------")
         if int(locations[currentlocation][int(requests[i].pickup)]) < closest:
             closestIndex = i
             closest=int(requests[i].pickup)
+        elif (int(locations[currentlocation][int(requests[i].pickup)]) == closest and requests[i].late < requests[closestIndex].late) :
+            print("iasosaoisa")
+            closestIndex = i
+            closest = int(requests[i].pickup)
     # print(closest)
     if(myTime==closest):
         return None
@@ -126,6 +132,7 @@ def MRV(index, capacity, timer, currentlocation, pickedRequestsQueue, done, loca
                 moreRequestsOnTheDelivery(deliverdReq, requests, capacity, pickedRequestsQueue)
             return (index, capacity, timer, currentlocation, pickedRequestsQueue, done, deliverdReq)
         if(flag == True):
+            print(temp.id)
             print("this is my current location "+str(currentlocation))
             requests=backtrack(requests,index,currentlocation)
             if requests==None:
@@ -228,5 +235,4 @@ while index < len(requests):
         # print("--------Deliverd requests--------")
         printRequests(done,"--------Deliverd requests--------")
         break
-
 
