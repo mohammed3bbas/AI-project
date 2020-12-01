@@ -17,7 +17,7 @@ def readLocations():
 
 def readRequests():
     "creating a list of requests (objects) each object contain (Request ID, Pickup location, Delivery location, early ,late)"
-    f = open("request-draft3.txt", "r")
+    f = open("request-draft.txt", "r")
     lines = f.readlines()
     requests = []
     counter = 0
@@ -63,12 +63,12 @@ def findClosestRequest(requests,currentlocation,index):
     print("current: "+str(currentlocation))
     closest = int(locations[currentlocation][int(requests[index].pickup)])
     myTime =closest
-    print(closest)
+    # print(closest)
     # print(closest)
     for i in range(index,len(requests)):
 
-        print("pick up : " +str(int(requests[i].pickup)))
-        print("distances : "+ str(locations[currentlocation][int(requests[i].pickup)]) )
+        # print("pick up : " +str(int(requests[i].pickup)))
+        # print("distances : "+ str(locations[currentlocation][int(requests[i].pickup)]) )
         # print("---------------")
         if int(locations[currentlocation][int(requests[i].pickup)]) < closest:
             closestIndex = i
@@ -132,8 +132,8 @@ def MRV(index, capacity, timer, currentlocation, pickedRequestsQueue, done, loca
                 moreRequestsOnTheDelivery(deliverdReq, requests, capacity, pickedRequestsQueue)
             return (index, capacity, timer, currentlocation, pickedRequestsQueue, done, deliverdReq)
         if(flag == True):
-            print(temp.id)
-            print("this is my current location "+str(currentlocation))
+            # print("-----------"+str(temp.id))
+            # print("this is my current location "+str(currentlocation))
             requests=backtrack(requests,index,currentlocation)
             if requests==None:
                 return (None,capacity, timer, currentlocation, pickedRequestsQueue, done, None)
@@ -171,6 +171,12 @@ def MRV(index, capacity, timer, currentlocation, pickedRequestsQueue, done, loca
             moreRequestsOnTheDelivery(deliverdReq, requests, capacity, pickedRequestsQueue)
 
         return (index, capacity, timer, currentlocation, pickedRequestsQueue, done, deliverdReq)
+
+    if (flag == True):
+        requests = backtrack(requests, index, currentlocation)
+        if requests == None:
+            return (None, capacity, timer, currentlocation, pickedRequestsQueue, done, None)
+        return (index, capacity, timer, currentlocation, pickedRequestsQueue, done, None)
 
     # else:
     #     index = index + 1
@@ -210,10 +216,12 @@ def moreRequestsOnThePickup(deliverdReq,requests,capacity,pickedRequestsQueue):
         # print("-------------------------")
     return (deliverdReq,capacity,pickedRequestsQueue)
 
-def printRequests(requests,message):
+def printRequests(requests,message="Requests"):
     print(message)
     for i in requests:
         print("Request id : "+i.id)
+
+
 
 locations = readLocations()  # all locarions
 requests = readRequests()  # all requests
@@ -231,8 +239,8 @@ while index < len(requests):
     index, capacity, timer, currentlocation, pickedRequestsQueue, done, deliverdReq = \
         MRV(index, capacity, timer, currentlocation, pickedRequestsQueue, done, locations,requests)
     if index==None:
-        print("NO SOLUOTION")
-        # print("--------Deliverd requests--------")
-        printRequests(done,"--------Deliverd requests--------")
+        print("--------    NO SOLUOTION   --------")
+        # print("-------- Deliverd requests --------")
+        printRequests(done,"-------- Deliverd requests --------")
         break
 
